@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "case_id": "research_fssi_baseline_v1",
+  "status": "frozen",
+  "purpose": "Synthetic inverse-problem baseline; not calibrated to any digitised paper curve.",
+  "model_definition": {
+    "system": "four_equation_fssi",
+    "state_order": [
+      "V",
+      "uz",
+      "P",
+      "sigma_z"
+    ],
+    "coefficient_model": "printed_equations",
+    "friction_model": "none",
+    "soil_closure": "homogeneous_isotropic_linear_elastic_effective_continuum",
+    "small_deformation": true
+  },
+  "coordinate_convention": {
+    "axial_coordinate": "x increases from upstream reservoir x=0 to downstream valve x=L",
+    "positive_fluid_velocity": "towards the downstream valve",
+    "positive_pipe_velocity": "towards the downstream valve",
+    "positive_axial_stress": "tension",
+    "pressure_reference": "absolute perturbation level used by the current equations; P0=rho_f*g*DeltaH"
+  },
+  "physical_parameters": {
+    "length_m": 100.0,
+    "inner_radius_m": 0.5,
+    "wall_thickness_m": 0.05,
+    "pipe_E_pa": 200000000000.0,
+    "pipe_nu": 0.3,
+    "pipe_density_kg_m3": 7800.0,
+    "water_density_kg_m3": 1000.0,
+    "water_bulk_modulus_pa": 2200000000.0,
+    "soil_E_pa": 2000000000.0,
+    "gravity_m_s2": 9.80665,
+    "head_difference_m": 4.0,
+    "initial_velocity_m_s": 0.06,
+    "valve_mass_kg": 100.0,
+    "valve_close_time_s": 0.03,
+    "t_final_s": 0.8,
+    "coefficient_model": "printed_equations"
+  },
+  "initial_conditions": {
+    "fluid_velocity": "V(x,0)=V0",
+    "pipe_velocity": "uz(x,0)=0",
+    "pressure": "P(x,0)=P0=rho_f*g*DeltaH",
+    "axial_stress": "sigma_z(x,0)=Af*P0/At",
+    "initial_stress_mode": "equilibrium"
+  },
+  "boundary_conditions": {
+    "upstream": [
+      "P(0,t)=P0",
+      "uz(0,t)=0"
+    ],
+    "downstream_kinematic": "V(L,t)-uz(L,t)=0.5*V0*[1+cos(pi*t/tc)] for t<tc and 0 afterwards",
+    "downstream_dynamic": "Mv*duz(L,t)/dt-Af*P(L,t)+At*sigma_z(L,t)=0",
+    "valve_law_status": "explicit reproducible research assumption; not the unpublished complete valve-opening iteration of Guo et al. (2024)"
+  },
+  "reference_solver": {
+    "method": "same_equation_characteristic_moc",
+    "n_cells": 640,
+    "cfl": 0.9,
+    "output_points": 1601,
+    "role": "synthetic truth and forward cross-verification, not experimental validation"
+  },
+  "reproducibility": {
+    "seed": 29,
+    "dtype": "float64",
+    "minimum_independent_training_runs": 5,
+    "config_is_single_source_of_truth": true
+  }
+}

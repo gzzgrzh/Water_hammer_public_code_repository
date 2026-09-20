@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "experiment_id": "revised_joint_threshold_assessment_v1",
+  "status": "registered_before_characteristic_model_scan",
+  "paper_route": "PAPER_IDEA_1_REVISED_CIVIL_SPARSE_SUPERVISION_2026-08-14.md",
+  "terminology": "joint response-threshold domain, not a code-compliant statutory safety domain",
+  "reason": "The frozen 100 m numerical benchmark is not tied to a specified pipe grade, design class, code, or project safety factor. Its axial-stress increments are far below ordinary steel strength limits; adopting a material strength value would make stress non-controlling throughout the registered domain. Three explicit operational threshold scenarios are therefore used to test the valve-closure workflow without claiming regulatory compliance.",
+  "source_model": {
+    "config": "PINN_FSSI_research_plan/configs/parametric_fssi_hybrid_formal_v3_balanced_events.json",
+    "checkpoint": "PINN_FSSI_research_plan/outputs/parametric_fssi_hybrid_formal_v3_balanced_events/formal/checkpoint.pt",
+    "selection_basis": "non-oracle physics-event sampling and sealed 24-case comparison",
+    "test_mean_pressure_nrmse": 0.019819313007850666,
+    "test_mean_axial_stress_nrmse": 0.028358427481460852,
+    "test_mean_pressure_peak_relative_error": 0.02258127389373059,
+    "test_mean_stress_peak_relative_error": 0.061990997182857076
+  },
+  "parameter_domain": {
+    "soil_to_pipe_modulus_ratio": [0.0003, 0.1],
+    "closure_time_over_L_cf": [0.1, 1.2],
+    "initial_velocity_m_s": [0.03, 0.09]
+  },
+  "threshold_scenarios": {
+    "conservative": {
+      "maximum_pressure_increment_pa": 110000.0,
+      "maximum_absolute_axial_stress_increment_pa": 750000.0,
+      "minimum_absolute_pressure_pa": 130000.0
+    },
+    "nominal": {
+      "maximum_pressure_increment_pa": 130000.0,
+      "maximum_absolute_axial_stress_increment_pa": 900000.0,
+      "minimum_absolute_pressure_pa": 120000.0
+    },
+    "permissive": {
+      "maximum_pressure_increment_pa": 150000.0,
+      "maximum_absolute_axial_stress_increment_pa": 1100000.0,
+      "minimum_absolute_pressure_pa": 105000.0
+    }
+  },
+  "primary_scenario": "nominal",
+  "scan": {
+    "soil_levels_for_velocity_closure_maps": [0.0003, 0.01, 0.1],
+    "velocity_levels_for_soil_closure_maps_m_s": [0.03, 0.06, 0.09],
+    "soil_points": 41,
+    "closure_points": 56,
+    "velocity_points": 41,
+    "spatial_points": 81,
+    "time_points": 401,
+    "inference_batch_size": 65536,
+    "case_checkpoint_interval": 50
+  },
+  "minimum_closure_rule": "smallest scanned closure ratio for which the selected case and every slower closure on the registered scan satisfy all three thresholds",
+  "dominant_control_rule": "largest utilization among pressure increment, axial-stress increment, and minimum-pressure lower-bound utilization; top-two difference <= 0.03 is reported as joint control",
+  "boundary_moc_registration": {
+    "case_count": 15,
+    "selection": "deterministic maximin subset among cases with nominal maximum utilization closest to one, stratified by dominant control and safe/unsafe side",
+    "formal_cells": 5120,
+    "saved_spatial_points": 161,
+    "saved_time_points": 801,
+    "selection_uses_moc_results": false,
+    "minimum_required_cases": 12
+  },
+  "claim_limits": [
+    "Thresholds are illustrative operational constraints and are not extracted from a design code.",
+    "No conclusion is permitted outside the registered three-parameter domain.",
+    "Boundary cases require new high-resolution MOC confirmation before reporting false-safe statistics.",
+    "A real project application must replace the three threshold scenarios with project-specific allowable values and safety factors."
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "model_id": "parametric_fssi_data_only_ann_v1_physics_events",
+  "status": "registered_before_training",
+  "paper_route": "PAPER_IDEA_1_REVISED_CIVIL_SPARSE_SUPERVISION_2026-08-14.md",
+  "design_config": "PINN_FSSI_research_plan/configs/parametric_fssi_forward_v1.json",
+  "anchor_config": "PINN_FSSI_research_plan/configs/parametric_fssi_hybrid_formal_v3_balanced_events.json",
+  "reference_root": "PINN_FSSI_research_plan/outputs/parametric_fssi_reference_v1/formal",
+  "method": "data_only_parametric_coordinate_ann",
+  "comparison_purpose": "Pure data-only baseline using the same non-oracle sparse labels as the production comparison.",
+  "network": {
+    "inputs": ["x_over_L", "t_over_T", "log_Es_over_E", "closure_time_over_L_cf", "initial_velocity_m_s"],
+    "outputs": ["V", "uz", "P", "sigma_z"],
+    "hidden_width": 96,
+    "hidden_layers": 4,
+    "activation": "tanh",
+    "uses_governing_equations": false,
+    "uses_boundary_or_initial_losses": false,
+    "uses_hard_physical_constraints": false,
+    "uses_characteristic_speeds": false,
+    "uses_travel_time_features": false
+  },
+  "anchor_objective": {
+    "tail_fraction": 0.10,
+    "tail_weight": 1.0,
+    "selection_and_labels_identical_to": "parametric_fssi_hybrid_formal_v3_balanced_events"
+  },
+  "training": {
+    "smoke": {
+      "epochs": 2,
+      "case_limit": 4,
+      "case_batch_size": 4,
+      "learning_rate": 0.0003,
+      "gradient_clip": 100.0,
+      "log_every": 1,
+      "checkpoint_every": 1,
+      "seed": 29041,
+      "dtype": "float64",
+      "device": "auto"
+    },
+    "formal": {
+      "epochs": 800,
+      "case_limit": 72,
+      "case_batch_size": 12,
+      "learning_rate": 0.0003,
+      "gradient_clip": 100.0,
+      "log_every": 25,
+      "checkpoint_every": 50,
+      "seed": 29041,
+      "dtype": "float64",
+      "device": "auto"
+    }
+  },
+  "evaluation": {
+    "stage": "formal",
+    "splits": ["validation", "test"],
+    "batch_size": 8192,
+    "model_selection_uses_validation_only": true
+  },
+  "acceptance": {
+    "validation_mean_pressure_nrmse": 0.10,
+    "validation_mean_axial_stress_nrmse": 0.15
+  },
+  "checkpoint_policy": {
+    "stable_checkpoint": "checkpoint.pt",
+    "interval_epochs": 50,
+    "resume_if_report_absent": true,
+    "return_existing_report_without_retraining": true
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "model_id": "parametric_fssi_conventional_full_domain_pinn_v1",
+  "status": "registered_before_smoke_and_formal_training",
+  "paper_route": "PAPER_IDEA_1_PARAMETRIC_PHYSICS_INFORMED_FSSI_2026-08-13.md",
+  "design_config": "PINN_FSSI_research_plan/configs/parametric_fssi_forward_v1.json",
+  "anchor_config": "PINN_FSSI_research_plan/configs/parametric_fssi_hybrid_formal_v4_peak_enriched.json",
+  "reference_root": "PINN_FSSI_research_plan/outputs/parametric_fssi_reference_v1/formal",
+  "method": "conventional_parametric_full_space_time_pinn_with_identical_training_anchors",
+  "comparison_purpose": "Single preregistered conventional PINN baseline for the characteristic physics-guided surrogate.",
+  "network": {
+    "inputs": ["x_over_L", "t_over_T", "log_Es_over_E", "closure_time_over_L_cf", "initial_velocity_m_s"],
+    "outputs": ["V", "uz", "P", "sigma_z"],
+    "hidden_width": 96,
+    "hidden_layers": 4,
+    "activation": "tanh",
+    "uses_fourier_features": false,
+    "uses_characteristic_speeds": false,
+    "uses_travel_time_features": false,
+    "hard_constraints": ["initial_state", "upstream_pressure", "upstream_axial_velocity", "valve_relative_velocity"]
+  },
+  "loss_weights": {
+    "pde": 0.25,
+    "valve_dynamic": 0.25,
+    "training_anchor": 8.0
+  },
+  "anchor_objective": {
+    "tail_fraction": 0.10,
+    "tail_weight": 1.0,
+    "selection_and_labels_identical_to": "parametric_fssi_hybrid_formal_v4_peak_enriched"
+  },
+  "training": {
+    "smoke": {
+      "epochs": 2,
+      "case_limit": 4,
+      "case_batch_size": 4,
+      "pde_points_per_case": 32,
+      "boundary_points_per_case": 16,
+      "learning_rate": 0.00006,
+      "gradient_clip": 100.0,
+      "log_every": 1,
+      "checkpoint_every": 2,
+      "seed": 29041,
+      "dtype": "float64",
+      "device": "auto"
+    },
+    "formal": {
+      "epochs": 600,
+      "case_limit": 72,
+      "case_batch_size": 12,
+      "pde_points_per_case": 256,
+      "boundary_points_per_case": 64,
+      "learning_rate": 0.00006,
+      "gradient_clip": 100.0,
+      "log_every": 25,
+      "checkpoint_every": 100,
+      "seed": 29041,
+      "dtype": "float64",
+      "device": "auto"
+    }
+  },
+  "evaluation": {
+    "stage": "formal",
+    "splits": ["validation", "test"],
+    "batch_size": 8192,
+    "test_is_read_once_after_the_frozen_600_epoch_run": true
+  },
+  "acceptance": {
+    "validation_pressure_nrmse": 0.02,
+    "validation_axial_stress_nrmse": 0.03,
+    "validation_pressure_peak_relative_error": 0.03,
+    "validation_stress_peak_relative_error": 0.05
+  },
+  "stop_rule": "Report the frozen 600-epoch result whether it passes or fails; do not launch architecture or loss-weight revisions."
+}

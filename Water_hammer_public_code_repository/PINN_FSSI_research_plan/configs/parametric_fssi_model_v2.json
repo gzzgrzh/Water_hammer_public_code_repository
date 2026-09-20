@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "model_id": "parametric_fssi_characteristic_model_v2_event_aligned",
+  "status": "hybrid_v2_registered",
+  "design_config": "PINN_FSSI_research_plan/configs/parametric_fssi_forward_v1.json",
+  "reference_root": "PINN_FSSI_research_plan/outputs/parametric_fssi_reference_v1/pilot",
+  "method": "three_parameter_hard_projected_characteristic_physics_model",
+  "network": {
+    "hidden_width": 96,
+    "hidden_layers": 4,
+    "time_fourier_frequencies": [1, 2, 3, 4, 6, 8, 12, 16],
+    "closure_phase_frequencies": [1, 2, 4],
+    "travel_time_frequencies": [1, 2, 4],
+    "output": ["two_outgoing_characteristic_corrections", "valve_axial_velocity_coordinate"],
+    "zero_initialize_output": true
+  },
+  "loss_weights": {"transport_consistency": 1.0, "valve_dynamic": 1.0},
+  "training_data_policy": {
+    "uses_moc_labels": false,
+    "uses_validation_cases": false,
+    "uses_test_cases": false,
+    "uses_digitised_literature_curves": false,
+    "uses_only_registered_train_coordinates_and_physics": true
+  },
+  "training": {
+    "smoke": {"epochs": 40, "case_limit": 4, "boundary_points": 161, "learning_rate": 0.0002, "gradient_clip": 100.0, "log_every": 10, "checkpoint_every": 40, "lbfgs_steps": 0, "seed": 29041, "dtype": "float64", "device": "auto"},
+    "pilot": {"epochs": 1000, "case_limit": 12, "boundary_points": 401, "learning_rate": 0.00012, "gradient_clip": 100.0, "log_every": 50, "checkpoint_every": 100, "lbfgs_steps": 0, "seed": 29041, "dtype": "float64", "device": "auto"}
+  },
+  "evaluation": {"stage": "pilot", "splits": ["validation", "test"], "batch_size": 8192, "field_metric_scale": "maximum_dynamic_range_or_perturbation_amplitude", "report_each_state_separately": true},
+  "acceptance": {"maximum_transport_nrmse": 1e-8, "maximum_hard_boundary_nrmse": 1e-10, "pilot_pressure_nrmse": 0.05, "pilot_axial_stress_nrmse": 0.08, "pilot_pressure_peak_relative_error": 0.08, "pilot_stress_peak_relative_error": 0.10}
+}

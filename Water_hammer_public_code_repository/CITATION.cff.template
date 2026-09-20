@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the archived software release and the associated article."
+title: "Code for characteristic-constrained boundary learning of coupled water-hammer fields"
+type: software
+authors:
+  - family-names: "REPLACE_WITH_FAMILY_NAME"
+    given-names: "REPLACE_WITH_GIVEN_NAME"
+version: "1.0.0"
+date-released: "YYYY-MM-DD"
+repository-code: "https://github.com/REPLACE_WITH_ACCOUNT/REPLACE_WITH_REPOSITORY"
+doi: "10.5281/zenodo.REPLACE_WITH_RECORD_NUMBER"
+license: MIT
+keywords:
+  - physics-informed neural network
+  - water hammer
+  - fluid-structure interaction
+  - sparse monitoring
+  - buried pipeline

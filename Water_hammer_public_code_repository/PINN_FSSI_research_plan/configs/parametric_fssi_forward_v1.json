@@ -1,0 +1,205 @@
+{
+  "schema_version": 1,
+  "experiment_id": "parametric_fssi_forward_v1",
+  "status": "frozen_for_p1_2",
+  "paper_route": "PAPER_IDEA_1_PARAMETRIC_PHYSICS_INFORMED_FSSI_2026-08-13.md",
+  "purpose": "Three-parameter forward prediction of four-state buried-pipe water-hammer response, followed by validated engineering parameter analysis.",
+  "baseline_config": "PINN_FSSI_research_plan/configs/research_baseline_v1.json",
+  "physical_parameter_overrides": {
+    "head_difference_m": 20.0
+  },
+  "model_scope": {
+    "system": "one_dimensional_four_equation_fssi",
+    "state_order": ["V", "uz", "P", "sigma_z"],
+    "soil_model": "homogeneous_isotropic_linear_elastic_effective_continuum",
+    "friction_model": "none",
+    "cavitation_model": "none_with_pressure_margin_gate",
+    "valve_law": "known_half_cosine_relative_flow",
+    "excluded_claims": [
+      "experimental validation of the complete four-state buried-pipe system",
+      "unknown-boundary reconstruction",
+      "parameter inversion",
+      "prediction outside the registered parameter domain"
+    ]
+  },
+  "parameter_domain": {
+    "soil_to_pipe_modulus_ratio": {
+      "symbol": "Es/E",
+      "lower": 0.0003,
+      "upper": 0.1,
+      "coordinate": "natural_log",
+      "engineering_role": "equivalent soil restraint"
+    },
+    "closure_time_over_L_cf": {
+      "symbol": "tc/(L/cf)",
+      "lower": 0.1,
+      "upper": 1.2,
+      "coordinate": "linear",
+      "engineering_role": "valve closure rate"
+    },
+    "initial_velocity_m_s": {
+      "symbol": "V0",
+      "lower": 0.03,
+      "upper": 0.09,
+      "coordinate": "linear",
+      "engineering_role": "operating flow velocity"
+    }
+  },
+  "pressure_validity": {
+    "model_pressure_convention": "gauge",
+    "atmospheric_pressure_pa": 101325.0,
+    "vapor_pressure_pa": 2339.0,
+    "minimum_cavitation_margin_pa": 20000.0,
+    "enforce_for_train_validation_test": true
+  },
+  "case_design": {
+    "pilot": {
+      "expected_counts": {"train": 12, "validation": 4, "test": 6},
+      "cases": [
+        {"case_id": "pilot_train_001", "split": "train", "test_class": "training", "soil_to_pipe_modulus_ratio": 0.0005, "closure_time_over_L_cf": 0.18, "initial_velocity_m_s": 0.044},
+        {"case_id": "pilot_train_002", "split": "train", "test_class": "training", "soil_to_pipe_modulus_ratio": 0.00075, "closure_time_over_L_cf": 0.42, "initial_velocity_m_s": 0.068},
+        {"case_id": "pilot_train_003", "split": "train", "test_class": "training", "soil_to_pipe_modulus_ratio": 0.0012, "closure_time_over_L_cf": 0.92, "initial_velocity_m_s": 0.052},
+        {"case_id": "pilot_train_004", "split": "train", "test_class": "training", "soil_to_pipe_modulus_ratio": 0.002, "closure_time_over_L_cf": 0.66, "initial_velocity_m_s": 0.082},
+        {"case_id": "pilot_train_005", "split": "train", "test_class": "training", "soil_to_pipe_modulus_ratio": 0.0035, "closure_time_over_L_cf": 1.08, "initial_velocity_m_s": 0.038},
+        {"case_id": "pilot_train_006", "split": "train", "test_class": "training", "soil_to_pipe_modulus_ratio": 0.006, "closure_time_over_L_cf": 0.30, "initial_velocity_m_s": 0.076},
+        {"case_id": "pilot_train_007", "split": "train", "test_class": "training", "soil_to_pipe_modulus_ratio": 0.01, "closure_time_over_L_cf": 0.78, "initial_velocity_m_s": 0.06},
+        {"case_id": "pilot_train_008", "split": "train", "test_class": "training", "soil_to_pipe_modulus_ratio": 0.016, "closure_time_over_L_cf": 0.54, "initial_velocity_m_s": 0.034},
+        {"case_id": "pilot_train_009", "split": "train", "test_class": "training", "soil_to_pipe_modulus_ratio": 0.027, "closure_time_over_L_cf": 1.00, "initial_velocity_m_s": 0.086},
+        {"case_id": "pilot_train_010", "split": "train", "test_class": "training", "soil_to_pipe_modulus_ratio": 0.042, "closure_time_over_L_cf": 0.22, "initial_velocity_m_s": 0.057},
+        {"case_id": "pilot_train_011", "split": "train", "test_class": "training", "soil_to_pipe_modulus_ratio": 0.062, "closure_time_over_L_cf": 0.70, "initial_velocity_m_s": 0.047},
+        {"case_id": "pilot_train_012", "split": "train", "test_class": "training", "soil_to_pipe_modulus_ratio": 0.082, "closure_time_over_L_cf": 0.46, "initial_velocity_m_s": 0.072},
+        {"case_id": "pilot_validation_001", "split": "validation", "test_class": "interpolation", "soil_to_pipe_modulus_ratio": 0.00065, "closure_time_over_L_cf": 0.74, "initial_velocity_m_s": 0.064},
+        {"case_id": "pilot_validation_002", "split": "validation", "test_class": "interpolation", "soil_to_pipe_modulus_ratio": 0.0028, "closure_time_over_L_cf": 0.34, "initial_velocity_m_s": 0.049},
+        {"case_id": "pilot_validation_003", "split": "validation", "test_class": "interpolation", "soil_to_pipe_modulus_ratio": 0.013, "closure_time_over_L_cf": 0.96, "initial_velocity_m_s": 0.079},
+        {"case_id": "pilot_validation_004", "split": "validation", "test_class": "interpolation", "soil_to_pipe_modulus_ratio": 0.052, "closure_time_over_L_cf": 0.58, "initial_velocity_m_s": 0.041},
+        {"case_id": "pilot_test_001", "split": "test", "test_class": "interpolation", "soil_to_pipe_modulus_ratio": 0.0017, "closure_time_over_L_cf": 0.52, "initial_velocity_m_s": 0.071},
+        {"case_id": "pilot_test_002", "split": "test", "test_class": "interpolation", "soil_to_pipe_modulus_ratio": 0.023, "closure_time_over_L_cf": 0.84, "initial_velocity_m_s": 0.045},
+        {"case_id": "pilot_test_003", "split": "test", "test_class": "boundary", "soil_to_pipe_modulus_ratio": 0.0003, "closure_time_over_L_cf": 0.10, "initial_velocity_m_s": 0.06},
+        {"case_id": "pilot_test_004", "split": "test", "test_class": "boundary", "soil_to_pipe_modulus_ratio": 0.1, "closure_time_over_L_cf": 1.20, "initial_velocity_m_s": 0.06},
+        {"case_id": "pilot_test_005", "split": "test", "test_class": "combination", "soil_to_pipe_modulus_ratio": 0.0045, "closure_time_over_L_cf": 1.08, "initial_velocity_m_s": 0.088},
+        {"case_id": "pilot_test_006", "split": "test", "test_class": "combination", "soil_to_pipe_modulus_ratio": 0.07, "closure_time_over_L_cf": 0.16, "initial_velocity_m_s": 0.032}
+      ]
+    },
+    "formal": {
+      "design_method": "deterministic_stratified_latin_hypercube_plus_registered_boundary_cases",
+      "interior_fraction_bounds": [0.03, 0.97],
+      "generated_splits": [
+        {"split": "train", "test_class": "training", "count": 72, "seed": 29011},
+        {"split": "validation", "test_class": "interpolation", "count": 12, "seed": 29012},
+        {"split": "test", "test_class": "interpolation", "count": 12, "seed": 29013}
+      ],
+      "registered_test_cases": [
+        {"case_id": "formal_test_boundary_001", "split": "test", "test_class": "boundary", "soil_to_pipe_modulus_ratio": 0.0003, "closure_time_over_L_cf": 0.65, "initial_velocity_m_s": 0.06},
+        {"case_id": "formal_test_boundary_002", "split": "test", "test_class": "boundary", "soil_to_pipe_modulus_ratio": 0.1, "closure_time_over_L_cf": 0.65, "initial_velocity_m_s": 0.06},
+        {"case_id": "formal_test_boundary_003", "split": "test", "test_class": "boundary", "soil_to_pipe_modulus_ratio": 0.01, "closure_time_over_L_cf": 0.1, "initial_velocity_m_s": 0.06},
+        {"case_id": "formal_test_boundary_004", "split": "test", "test_class": "boundary", "soil_to_pipe_modulus_ratio": 0.01, "closure_time_over_L_cf": 1.2, "initial_velocity_m_s": 0.06},
+        {"case_id": "formal_test_boundary_005", "split": "test", "test_class": "boundary", "soil_to_pipe_modulus_ratio": 0.01, "closure_time_over_L_cf": 0.65, "initial_velocity_m_s": 0.03},
+        {"case_id": "formal_test_boundary_006", "split": "test", "test_class": "boundary", "soil_to_pipe_modulus_ratio": 0.01, "closure_time_over_L_cf": 0.65, "initial_velocity_m_s": 0.09},
+        {"case_id": "formal_test_combination_001", "split": "test", "test_class": "combination", "soil_to_pipe_modulus_ratio": 0.0003, "closure_time_over_L_cf": 0.1, "initial_velocity_m_s": 0.03},
+        {"case_id": "formal_test_combination_002", "split": "test", "test_class": "combination", "soil_to_pipe_modulus_ratio": 0.1, "closure_time_over_L_cf": 1.2, "initial_velocity_m_s": 0.09},
+        {"case_id": "formal_test_combination_003", "split": "test", "test_class": "combination", "soil_to_pipe_modulus_ratio": 0.0006, "closure_time_over_L_cf": 1.1, "initial_velocity_m_s": 0.085},
+        {"case_id": "formal_test_combination_004", "split": "test", "test_class": "combination", "soil_to_pipe_modulus_ratio": 0.07, "closure_time_over_L_cf": 0.15, "initial_velocity_m_s": 0.035},
+        {"case_id": "formal_test_combination_005", "split": "test", "test_class": "combination", "soil_to_pipe_modulus_ratio": 0.001, "closure_time_over_L_cf": 0.2, "initial_velocity_m_s": 0.085},
+        {"case_id": "formal_test_combination_006", "split": "test", "test_class": "combination", "soil_to_pipe_modulus_ratio": 0.08, "closure_time_over_L_cf": 1.1, "initial_velocity_m_s": 0.035}
+      ],
+      "expected_counts": {"train": 72, "validation": 12, "test": 24}
+    }
+  },
+  "truth_solver": {
+    "method": "independent_same_equation_characteristic_moc",
+    "uses_neural_model": false,
+    "cfl": 0.9,
+    "smoke": {"n_cells": 40, "output_points": 101, "t_final_s": 0.08, "case_limit": 2},
+    "pilot": {"n_cells": 640, "output_points": 1601, "t_final_s": 0.8},
+    "formal": {"n_cells": 5120, "output_points": 1601, "t_final_s": 0.8},
+    "grid_convergence_check": {
+      "cell_counts": [1280, 2560, 5120],
+      "registered_cases": ["pilot_test_003", "pilot_test_004", "pilot_test_005"],
+      "maximum_pressure_nrmse_final_pair": 0.005,
+      "maximum_four_state_nrmse_final_pair": 0.01,
+      "revision_reason": "the first 1280-to-2560 audit passed pressure but produced uz NRMSE=0.0104268 for the fastest-closure soft-soil boundary case"
+    },
+    "storage": {
+      "saved_spatial_points": 161,
+      "saved_time_stride": 2,
+      "reason": "retain auditable four-state fields without duplicating the full MOC working grid"
+    }
+  },
+  "training_data_policy": {
+    "allowed": [
+      "governing_equations",
+      "registered_initial_conditions",
+      "registered_boundary_conditions",
+      "registered_parameter_coordinates"
+    ],
+    "forbidden": [
+      "MOC full-field values",
+      "MOC sensor values",
+      "validation cases",
+      "test cases",
+      "digitised literature curves"
+    ],
+    "mixed_physics_data_fallback": {
+      "enabled_initially": false,
+      "condition": "only after a preregistered physics-only pilot fails",
+      "required_reporting": "rename the method and report an anchor-count ablation"
+    }
+  },
+  "validation_plan": {
+    "classic_equation_check": "Tijsseling exact/recursive benchmark versus MOC and the proposed method",
+    "independent_multicase_check": "all held-out validation and test cases versus MOC in all four states",
+    "external_checks": [
+      {"source": "Guo et al. 2024", "role": "published Es/E response trends and characteristic features", "claim_limit": "trend or feature comparison only when inputs match"},
+      {"source": "Xu et al. 2025", "role": "buried-pipe stiffness and propagation trend", "claim_limit": "trend comparison; not full transient reproduction"},
+      {"source": "Cao et al. 2021", "role": "published wave-speed or radial-compliance feature", "claim_limit": "feature-level comparison"},
+      {"source": "Keramat et al. public experiment", "role": "pressure feature check for axially supported FSI", "claim_limit": "conditional FSI validation; not continuous-soil FSSI validation"}
+    ]
+  },
+  "acceptance": {
+    "pilot_continue": {
+      "pressure_nrmse_max": 0.05,
+      "axial_stress_nrmse_max": 0.08,
+      "pressure_peak_relative_error_max": 0.08,
+      "stress_peak_relative_error_max": 0.10,
+      "noncavitation_classification_accuracy": 1.0
+    },
+    "formal_target": {
+      "pressure_nrmse_max": 0.02,
+      "axial_stress_nrmse_max": 0.03,
+      "pressure_peak_relative_error_max": 0.03,
+      "stress_peak_relative_error_max": 0.05,
+      "noncavitation_classification_accuracy": 1.0
+    }
+  },
+  "parameter_analysis": {
+    "start_condition": "classic and held-out numerical validation passed",
+    "domain_rule": "no engineering conclusion outside the registered parameter domain",
+    "primary_outputs": [
+      "maximum_pressure_increment",
+      "minimum_absolute_pressure",
+      "maximum_axial_stress_increment",
+      "pressure_first_peak_time",
+      "stress_first_peak_time",
+      "pressure_critical_location_over_L",
+      "stress_critical_location_over_L"
+    ],
+    "required_analyses": [
+      "one-factor response curves with the other two parameters at registered reference values",
+      "two-factor response surfaces at three levels of the third parameter",
+      "global main-effect and interaction ranking",
+      "MOC spot checks at extrema and response-surface turning points"
+    ],
+    "reference_values": {
+      "soil_to_pipe_modulus_ratio": 0.01,
+      "closure_time_over_L_cf": 0.65,
+      "initial_velocity_m_s": 0.06
+    }
+  },
+  "paper_result_mapping": {
+    "classic_validation": "Fig. 3 and Table 2",
+    "held_out_test_accuracy": "Fig. 4-5 and Table 3",
+    "external_feature_checks": "Fig. 6",
+    "efficiency": "Fig. 7 and Table 4",
+    "parameter_analysis": "Fig. 8-9 and Table 5"
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "status": "registered_parameter_input_ablation_2026_08_15",
+  "design_config": "PINN_FSSI_research_plan/configs/parametric_fssi_forward_v1.json",
+  "base_model_config": "PINN_FSSI_research_plan/configs/parametric_fssi_model_v2.json",
+  "warm_start_checkpoint": "PINN_FSSI_research_plan/outputs/parametric_fssi_hybrid_formal_v2_tail/formal/checkpoint.pt",
+  "reference_root": "PINN_FSSI_research_plan/outputs/parametric_fssi_reference_v1/formal",
+  "data_stage": "formal",
+  "method": "three_parameter_characteristic_physics_data_hybrid_surrogate",
+  "anchor_policy": {
+    "allowed_split": "train",
+    "spatial_points_per_case": 8,
+    "time_points_per_case": 48,
+    "states": [
+      "V",
+      "uz",
+      "P",
+      "sigma_z"
+    ],
+    "selection": "balanced_dual_characteristic_event_aligned_v2",
+    "anchor_vectors_per_case": 384,
+    "total_anchor_vectors": 27648,
+    "total_scalar_labels": 110592,
+    "saved_reference_grid_per_case": {
+      "spatial_points": 161,
+      "time_points": 801,
+      "space_time_vectors": 128961
+    },
+    "space_time_vector_fraction_per_case": 0.00297764440412218,
+    "spatial_indices": [
+      0,
+      23,
+      46,
+      69,
+      91,
+      114,
+      137,
+      160
+    ],
+    "spatial_positions_over_L": [
+      0,
+      0.14375,
+      0.2875,
+      0.43125,
+      0.56875,
+      0.7125,
+      0.85625,
+      1
+    ],
+    "time_positions": "case- and position-specific; balanced dual-characteristic events",
+    "validation_and_test_labels_forbidden": true
+  },
+  "anchor_objective": {
+    "mean_squared_weight": 1,
+    "tail_fraction": 0.1,
+    "tail_weight": 1,
+    "tail_scope": "statewise"
+  },
+  "loss_weights": {
+    "transport_consistency": 0.25,
+    "valve_dynamic": 0.25,
+    "training_anchor": 8
+  },
+  "training": {
+    "smoke": {
+      "epochs": 2,
+      "case_limit": 4,
+      "boundary_points": 161,
+      "learning_rate": 0.00008,
+      "gradient_clip": 100,
+      "log_every": 1,
+      "checkpoint_every": 1,
+      "seed": 29041,
+      "dtype": "float64",
+      "device": "auto"
+    },
+    "formal": {
+      "epochs": 800,
+      "case_limit": 72,
+      "boundary_points": 401,
+      "learning_rate": 0.00008,
+      "gradient_clip": 100,
+      "log_every": 25,
+      "checkpoint_every": 50,
+      "seed": 29041,
+      "dtype": "float64",
+      "device": "auto"
+    }
+  },
+  "evaluation": {
+    "stage": "formal",
+    "splits": [
+      "validation"
+    ],
+    "batch_size": 8192
+  },
+  "acceptance": {
+    "formal_pressure_nrmse": 0.02,
+    "formal_axial_stress_nrmse": 0.03,
+    "formal_pressure_peak_relative_error": 0.03,
+    "formal_stress_peak_relative_error": 0.05,
+    "maximum_hard_boundary_nrmse": 1e-10
+  },
+  "model_id": "parametric_fssi_input_ablation_no_initial_velocity_raw_v1",
+  "registration_reason": "Removes only the explicit normalized V0 coordinate from the neural network; V0 remains active in the initial state and boundary reconstruction.",
+  "network_input_ablation": {
+    "raw_parameter_channels": {
+      "soil_to_pipe_modulus_ratio": true,
+      "closure_time_over_L_cf": true,
+      "initial_velocity_m_s": false
+    },
+    "closure_phase_features": true,
+    "travel_time_features": true
+  }
+}
